@@ -17,7 +17,7 @@
 
 // This kountdown struct eases the process of importing parsed kountdowns
 // Contains the relevant properties for QML code to read
-typedef struct kountdown {
+struct Kountdown {
 	Q_GADGET
 	Q_PROPERTY(int index MEMBER index)
 	Q_PROPERTY(QString name MEMBER name)
@@ -25,13 +25,14 @@ typedef struct kountdown {
 	Q_PROPERTY(QString date MEMBER date)
 	Q_PROPERTY(QString colour MEMBER colour)
 	
-	public:
-		int index;
-		QString name;
-		QString description;
-		QString date;
-		QString colour;
-} kountdown;
+public:
+	int index;
+	QString name;
+	QString description;
+	QString date;
+	QString colour;
+};
+Q_DECLARE_METATYPE(Kountdown)
 
 class ImportExport : public QObject
 {
@@ -49,7 +50,6 @@ public:
 	Q_INVOKABLE void exportFile();
 	
 private:
-	//QVectors are dynamic arrays which can store data structures of your choosing
-	QVector<kountdown> _kountdownArray;
-	QJsonDocument _createJson();
+	QList<Kountdown> m_kountdownArray;
+	[[nodiscard]] QJsonDocument createJson() const;
 };

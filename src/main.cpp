@@ -31,7 +31,7 @@
  */
 
 // Define the database driver in a string
-const QString DRIVER(QStringLiteral("QSQLITE"));
+const auto DRIVER = QStringLiteral("QSQLITE");
 
 /* #ifdefs are ifs that affect the preprocessor.
  * We can use this to compile specific chunks of code depending on the platform!
@@ -54,68 +54,65 @@ int main(int argc, char *argv[])
 
 	KLocalizedString::setApplicationDomain("daykountdown");
 
-	// KAboutData instances hold information about the application
-	KAboutData about(QStringLiteral("daykountdown"), i18nc("@title", "DayKountdown"), QStringLiteral("0.1"),
-						i18nc("@title", "A day countdown application"),
-						KAboutLicense::GPL_V3);
+	const KAboutData about(
+		QStringLiteral("daykountdown"), 
+		i18nc("@title", "DayKountdown"), 
+		QStringLiteral("0.1"),
+		i18nc("@title", "A day countdown application"),
+		KAboutLicense::GPL_V3,
+		{},
+		{},
+		{},
+		QStringLiteral("claudio.cambra@gmail.com")
+	);
+	
+	KAboutData aboutData = about;
+	aboutData.addAuthor(
+		i18nc("@info:credit", "Claudio Cambra"), 
+		i18nc("@info:credit", "Creator"), 
+		QStringLiteral("claudio.cambra@gmail.com")
+	);
+	aboutData.addAuthor(
+		i18nc("@info:credit", "Carl Schwan"), 
+		i18nc("@info:credit", "SQLite pro and code review")
+	);
 
-	about.addAuthor(i18nc("@info:credit", "Claudio Cambra"), i18nc("@info:credit", "Creator"), 
-					QStringLiteral("claudio.cambra@gmail.com"));
-	about.addAuthor(i18nc("@info:credit", "Carl Schwan"), i18nc("@info:credit", "SQLite pro and code review"));
-
-	// Sets the KAboutData instance
-	KAboutData::setApplicationData(about);
+	KAboutData::setApplicationData(aboutData);
 	QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("org.kde.daykountdown")));
 	
-	// We are instantiating the kcfg here
-	auto config = DayKountdownConfig::self();
+	auto* config = DayKountdownConfig::self();
 
-	// Q_ASSERTs hald the problem if the argument is false
 	Q_ASSERT(QSqlDatabase::isDriverAvailable(DRIVER));
-	
-	/*
-	 * .mkpath() creates the directory oath, including all parent directories (returning true if successful)
-	 * cleanPath() returns the path with directory separators normalised ("/") and redundant ones removed 
-	 * 	also "." and ".." resolved
-	 * QStandardPaths is a class that provides methods to query standard locations on the filesystem
-	 * writableLocation() returns the directory where files of QStandardPaths::DataLocation type should be written to
-	 */
 	Q_ASSERT(QDir().mkpath(QDir::cleanPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))));
-	// Creates SQLite database object instance
+	
 	QSqlDatabase db = QSqlDatabase::addDatabase(DRIVER);
-	// The auto keyword automatically decides the type of the variable 'path' at compile time
-	// This line defines a path for our application to have a folder to save stuff in
-	// qApp macro returns a pointer to the running QApplication instance
-	const auto path = QDir::cleanPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/") + qApp->applicationName());
+	const auto path = QDir::cleanPath(
+		QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + 
+		QStringLiteral("/") + qApp->applicationName()
+	);
 	db.setDatabaseName(path);
 	if (!db.open()) {
 		qCritical() << db.lastError() << "while opening database at" << path;
 	}
 
-	// Let Qt parse and remove arguments meant to affect Qt
 	QCommandLineParser parser;
-	about.setupCommandLine(&parser);
+	aboutData.setupCommandLine(&parser);
 	parser.process(app);
-	about.processCommandLine(&parser);
+	aboutData.processCommandLine(&parser);
 
 	QQmlApplicationEngine engine;
 	
-	// We instantiate the AboutDataPasser class so we can easily pass the about data to QML
-	AboutDataPasser AboutData;
-	AboutData.setAboutData(about);
+	AboutDataPasser aboutDataPasser;
+	aboutDataPasser.setAboutData(aboutData);
 	
-	// Lets you import instantiations of these classes into QML code
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "KountdownModel", new KountdownModel(qApp));
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "ImportExport", new ImportExport());
-	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "AboutData", &AboutData);
+	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "AboutData", &aboutDataPasser);
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "Config", config);
 
-	// Set up localisation functionality
 	engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
-	// Load main.qml
 	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-	// Stop function if QML is empty
 	if (engine.rootObjects().isEmpty()) {
 		return -1;
 	}

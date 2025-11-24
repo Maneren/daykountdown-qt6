@@ -10,7 +10,7 @@ import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.workspace.calendar as PlasmaCalendar
 
-import org.kde.daykountdown.private 1.0
+import org.kde.daykountdown.private
 
 Kirigami.ScrollablePage {
 	id: settingsPage
