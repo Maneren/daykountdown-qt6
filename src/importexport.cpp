@@ -64,7 +64,6 @@ void ImportExport::fetchKountdowns() {
 
 	QFile inFile(filePath.toLocalFile());
 	if(inFile.exists()) {
-		qDebug() << "Found kountdowns.json";
 		if (!inFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
 			// QErrorMessage::showMessage(QStringLiteral("Failed to open save file"));
 			return;
@@ -77,8 +76,10 @@ void ImportExport::fetchKountdowns() {
 		QJsonParseError errorPtr;
 		// Create internal JSON doc from data, with errorPtr address for errors
 		QJsonDocument kountdownsDoc = QJsonDocument::fromJson(data, &errorPtr);
-		if(kountdownsDoc.isNull())
-			qDebug() << "Parse failed";
+		if(kountdownsDoc.isNull()) {
+			qCritical() << "Failed to parse JSON:" << errorPtr.errorString();
+			return;
+		}
 		// Create JSON object from root object of JSON file
 		QJsonObject rootObj = kountdownsDoc.object();
 		// Create array from the root object's value of "kountdowns" key (which is an array)
@@ -117,9 +118,6 @@ void ImportExport::fetchKountdowns() {
 			_kountdownArray.append(currKountdown);
 			i++;
 		}
-	}
-	else {
-		qDebug() << "Didn't find kountdowns.json";
 	}
 }
 

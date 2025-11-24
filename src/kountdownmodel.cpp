@@ -120,12 +120,8 @@ bool KountdownModel::editKountdown(int index, const QString& name, const QString
 	record.setValue(QStringLiteral("Date"), date.toString(Qt::ISODate));
 	record.setValue(QStringLiteral("DateInMs"), date.toMSecsSinceEpoch());
 	record.setValue(QStringLiteral("Colour"), colour);
-	qDebug() << record;
 	bool result = setRecord(index, record);
-	qDebug() << result;
 	result &= submitAll();
-	qDebug() << result;
-	qDebug() << KountdownModel::lastError();
 	return result;
 }
 
