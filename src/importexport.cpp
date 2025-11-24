@@ -5,8 +5,11 @@
 */
 
 #include "importexport.h"
+#include "constants.h"
 #include <QErrorMessage>
 #include <qsqlquery.h>
+
+using namespace DayKountdown;
 
 // Constructor function
 ImportExport::ImportExport(QObject *parent) : QObject(parent)
@@ -18,25 +21,25 @@ ImportExport::ImportExport(QObject *parent) : QObject(parent)
 QJsonDocument ImportExport::createJson() const {
 	QJsonArray kountdownsJsonArr;
 	
-	QSqlQuery query(QStringLiteral("SELECT * FROM KountdownModel"));
+	QSqlQuery query(QStringLiteral("SELECT * FROM %1").arg(Database::TABLE_NAME));
 	while(query.next()) {
 		const QJsonObject kountdownToAdd {
-			{QStringLiteral("name"), query.value(1).toString()},
-			{QStringLiteral("description"), query.value(2).toString()},
-			{QStringLiteral("date"), query.value(3).toString()},
-			{QStringLiteral("colour"), query.value(5).toString()}
+			{Database::Columns::NAME_NAME, query.value(Database::Columns::NAME).toString()},
+			{Database::Columns::DESCRIPTION_NAME, query.value(Database::Columns::DESCRIPTION).toString()},
+			{Database::Columns::DATE_NAME, query.value(Database::Columns::DATE).toString()},
+			{Database::Columns::COLOUR_NAME, query.value(Database::Columns::COLOUR).toString()}
 		};
 		kountdownsJsonArr.append(kountdownToAdd);
 	}
 	
-	const QJsonObject mainObj {{QStringLiteral("kountdowns"), kountdownsJsonArr}};
+	const QJsonObject mainObj {{Files::JSON_KEY_KOUNTDOWNS, kountdownsJsonArr}};
 	return QJsonDocument(mainObj);
 }
 
 void ImportExport::exportFile() {
 	const QString fileName = QFileDialog::getSaveFileName(nullptr, i18n("Save File As"), 
-	                                                       QStringLiteral("exported_kountdowns.json"), 
-	                                                       QStringLiteral("JSON (*.json)"));
+	                                                       Files::DEFAULT_EXPORT_NAME, 
+	                                                       Files::JSON_FILTER);
 	const QJsonDocument jsonDoc = createJson();
 	QSaveFile file(fileName);
 	if(file.open(QIODevice::WriteOnly)) {
@@ -70,19 +73,19 @@ void ImportExport::fetchKountdowns() {
 	}
 	
 	const QJsonObject rootObj = kountdownsDoc.object();
-	const QJsonArray kountdownsJsonArray = rootObj.value(QStringLiteral("kountdowns")).toArray();
+	const QJsonArray kountdownsJsonArray = rootObj.value(Files::JSON_KEY_KOUNTDOWNS).toArray();
 	
 	int i = 0;
 	for (const QJsonValue& kountdownJson : kountdownsJsonArray) {
 		const QJsonObject obj = kountdownJson.toObject();
 		Kountdown currKountdown{
 			.index = i,
-			.name = obj.value(QStringLiteral("name")).toString(),
-			.description = obj.value(QStringLiteral("description")).toString(),
-			.date = obj.value(QStringLiteral("date")).toString(),
-			.colour = obj.contains(QStringLiteral("colour")) 
-			          ? obj.value(QStringLiteral("colour")).toString() 
-			          : QStringLiteral("palette.text")
+			.name = obj.value(Database::Columns::NAME_NAME).toString(),
+			.description = obj.value(Database::Columns::DESCRIPTION_NAME).toString(),
+			.date = obj.value(Database::Columns::DATE_NAME).toString(),
+			.colour = obj.contains(Database::Columns::COLOUR_NAME) 
+			          ? obj.value(Database::Columns::COLOUR_NAME).toString() 
+			          : UI::Colors::DEFAULT
 		};
 		m_kountdownArray.append(currKountdown);
 		++i;

@@ -26,12 +26,9 @@
 #include "importexport.h"
 #include "aboutdatapasser.h"
 #include "daykountdownconfig.h"
-/* This last header file is auto-created by daykountdown.kcfgc
- * It allows us to easily instantiate the config class by the name provided there.
- */
+#include "constants.h"
 
-// Define the database driver in a string
-const auto DRIVER = QStringLiteral("QSQLITE");
+using namespace DayKountdown;
 
 /* #ifdefs are ifs that affect the preprocessor.
  * We can use this to compile specific chunks of code depending on the platform!
@@ -82,10 +79,10 @@ int main(int argc, char *argv[])
 	
 	auto* config = DayKountdownConfig::self();
 
-	Q_ASSERT(QSqlDatabase::isDriverAvailable(DRIVER));
+	Q_ASSERT(QSqlDatabase::isDriverAvailable(Database::DRIVER));
 	Q_ASSERT(QDir().mkpath(QDir::cleanPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))));
 	
-	QSqlDatabase db = QSqlDatabase::addDatabase(DRIVER);
+	QSqlDatabase db = QSqlDatabase::addDatabase(Database::DRIVER);
 	const auto path = QDir::cleanPath(
 		QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + 
 		QStringLiteral("/") + qApp->applicationName()
