@@ -21,54 +21,51 @@ Kirigami.ScrollablePage {
 	}
 
 	ColumnLayout {
-		id: settingsLayout
-		ColumnLayout {
-			id: calendarSettingsLayout
+		id: calendarSettingsLayout
+		Layout.fillWidth: true
 
-			Kirigami.Heading {
-				level: 1
-				text: i18n("Calendar settings")
-			}
+		Kirigami.Heading {
+			level: 1
+			text: i18n("Calendar settings")
+		}
 
-			Repeater {
-				id: calendarPluginsRepeater
-				model: PlasmaCalendar.EventPluginsManager.model
-				delegate: RowLayout {
-					Controls.CheckBox {
-						text: model.display
-						checked: model.checked
-						onClicked: {
-							//needed for model's setData to be called
-							model.checked = checked;
-							Config.enabledCalendarPlugins = PlasmaCalendar.EventPluginsManager.enabledPlugins;
-							Config.save()
-						}
+		Repeater {
+			id: calendarPluginsRepeater
+			model: PlasmaCalendar.EventPluginsManager.model
+			delegate: RowLayout {
+				Controls.CheckBox {
+					text: model.display
+					checked: model.checked
+					onClicked: {
+						//needed for model's setData to be called
+						model.checked = checked;
+						Config.enabledCalendarPlugins = PlasmaCalendar.EventPluginsManager.enabledPlugins;
+						Config.save()
 					}
 				}
 			}
+		}
 
-			Repeater {
-				id: calendarPluginsSettings
+		Repeater {
+			id: calendarPluginsSettings
 
-				model: PlasmaCalendar.EventPluginsManager.model
-				delegate: ColumnLayout {
+			model: PlasmaCalendar.EventPluginsManager.model
+			delegate: ColumnLayout {
+				Layout.fillWidth: true
+				Kirigami.Heading {
+					level: 2
+					text: model.display
+				}
+				Loader {
 					Layout.fillWidth: true
-					Layout.fillHeight: true
-					Kirigami.Heading {
-						level: 2
-						text: model.display
-					}
-					Loader {
-						Layout.fillWidth: true
-						source: "file:" + model.configUi
-						visible: Config.enabledCalendarPlugins.indexOf(model.pluginPath) > -1
-						onLoaded: {
-							this.item.configurationChanged.connect(this.item.saveConfig)
-							if(model.label = "PIM Events Plugin")
-								this.item.height = Kirigami.Units.gridUnit * 15
-							if (model.label = "Astronomical Events")
-								this.item.wideMode = false
-						}
+					source: "file:" + model.configUi
+					visible: Config.enabledCalendarPlugins.indexOf(model.pluginPath) > -1
+					onLoaded: {
+						this.item.configurationChanged.connect(this.item.saveConfig)
+						if(model.label == "PIM Events Plugin")
+							this.item.height = Kirigami.Units.gridUnit * 15
+						if (model.label == "Astronomical Events")
+							this.item.wideMode = false
 					}
 				}
 			}
