@@ -23,7 +23,7 @@
 #include <KLocalizedString>
 
 #include "kountdownmodel.h"
-#include "importexport.h"
+#include "kountdownservice.h"
 #include "daykountdownconfig.h"
 #include "constants.h"
 
@@ -111,7 +111,8 @@ int main(int argc, char *argv[])
 	QQmlApplicationEngine engine;
 	
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "KountdownModel", new KountdownModel(qApp));
-	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "ImportExport", new ImportExport());
+	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "KountdownExporter", new KountdownExporter());
+	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "KountdownImporter", new KountdownImporter());
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "AboutData", new AboutDataWrapper(aboutData, qApp));
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "Config", config);
 

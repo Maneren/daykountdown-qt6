@@ -1,7 +1,7 @@
 set(daykountdown_SRCS
     main.cpp
     kountdownmodel.cpp
-    importexport.cpp
+    kountdownservice.cpp
     resources.qrc
     )
 

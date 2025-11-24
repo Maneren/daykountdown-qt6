@@ -40,23 +40,13 @@ Kirigami.ApplicationWindow {
 				text: i18n("Import")
 				icon.name: "document-open"
 				shortcut: StandardKey.Open
-				onTriggered: {
-					ImportExport.fetchKountdowns();
-					for(var i in ImportExport.Kountdowns) {
-						KountdownModel.addKountdown(
-							ImportExport.Kountdowns[i].name,
-							ImportExport.Kountdowns[i].description,
-							new Date(ImportExport.Kountdowns[i].date),
-							ImportExport.Kountdowns[i].colour
-						);
-					}
-				}
+				onTriggered: KountdownImporter.importFromFile()
 			},
 			Kirigami.Action {
 				text: i18n("Export")
 				icon.name: "document-save"
 				shortcut: StandardKey.Save
-				onTriggered: ImportExport.exportFile()
+				onTriggered: KountdownExporter.exportToFile()
 			},
 			Kirigami.Action {
 				text: i18n("Clear all kountdowns")
@@ -97,6 +87,22 @@ Kirigami.ApplicationWindow {
 		text: i18n("Are you sure you want to delete all your kountdowns?")
 		buttons: MessageDialog.Yes | MessageDialog.Cancel
 		onAccepted: KountdownModel.removeAllKountdowns()
+	}
+
+	// Handle import completion
+	Connections {
+		target: KountdownImporter
+		function onImportCompleted() {
+			const kountdowns = KountdownImporter.importedKountdowns();
+			for(var i = 0; i < kountdowns.length; i++) {
+				KountdownModel.addKountdown(
+					kountdowns[i].name,
+					kountdowns[i].description,
+					new Date(kountdowns[i].date),
+					kountdowns[i].colour
+				);
+			}
+		}
 	}
 
 	// Fetches item from addEditSheet.qml and does action on signal
