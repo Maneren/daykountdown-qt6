@@ -19,11 +19,11 @@
 // Contains the relevant properties for QML code to read
 typedef struct kountdown {
 	Q_GADGET
-	Q_PROPERTY(int index MEMBER index);
-	Q_PROPERTY(QString name MEMBER name);
-	Q_PROPERTY(QString description MEMBER description);
-	Q_PROPERTY(QString date MEMBER date);
-	Q_PROPERTY(QString colour MEMBER colour);
+	Q_PROPERTY(int index MEMBER index)
+	Q_PROPERTY(QString name MEMBER name)
+	Q_PROPERTY(QString description MEMBER description)
+	Q_PROPERTY(QString date MEMBER date)
+	Q_PROPERTY(QString colour MEMBER colour)
 	
 	public:
 		int index;

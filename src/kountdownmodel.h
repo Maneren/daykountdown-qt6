@@ -36,7 +36,7 @@ public:
 		DateAsc,
 		DateDesc,
 	};
-	Q_ENUMS(SortTypes);
+	Q_ENUMS(SortTypes)
 
 public:
 	// Constructor function

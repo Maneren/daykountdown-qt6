@@ -22,7 +22,7 @@ There is also [an additional Plasma desktop widget](https://github.com/elChupaCa
 ## Prerequisites
 
 - A Linux install
-- Qt5 packages from your distribution's repositories
+- Qt6 packages from your distribution's repositories
 - KDE packages (including Kirigami)
 - CMake
 - Ninja

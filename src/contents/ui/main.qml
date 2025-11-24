@@ -1,17 +1,17 @@
 /*
 * SPDX-FileCopyrightText: (C) 2021 Carl Schwan <carl@carlschwan.eu>
 * SPDX-FileCopyrightText: (C) 2021 Claudio Cambra <claudio.cambra@gmail.com>
-* 
+*
 * SPDX-LicenseRef: GPL-3.0-or-later
 */
 
 // Includes relevant modules used by the QML
-import QtQuick 2.6
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.2
-import QtQuick.Dialogs 1.3
-import org.kde.kirigami 2.13 as Kirigami
-import org.kde.daykountdown.private 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import QtQuick.Dialogs
+import org.kde.kirigami as Kirigami
+import org.kde.daykountdown.private
 
 // Base element, provides basic features needed for all kirigami applications
 Kirigami.ApplicationWindow {
@@ -20,17 +20,17 @@ Kirigami.ApplicationWindow {
 
 	// Window title
 	title: i18nc("@title:window", "Day Kountdown")
-	
+
 	property date nowDate: new Date()
 	property bool calPageOpen: false
-	
+
 	Timer {
 		interval: 60000
 		running: true
 		repeat: true
 		onTriggered: nowDate = new Date()
 	}
-	
+
 	// Global drawer element with app-wide actions
 	globalDrawer: Kirigami.GlobalDrawer {
 		// Makes drawer a small menu rather than sliding pane
@@ -83,38 +83,37 @@ Kirigami.ApplicationWindow {
 			}
 		]
 	}
-	
+
 	Component {
-        id: aboutPage
-        Kirigami.AboutPage {
-            aboutData: AboutData.aboutData
-        }
+    id: aboutPage
+    Kirigami.AboutPage {
+      aboutData: AboutData.aboutData
     }
-	
-    MessageDialog {
+  }
+
+  MessageDialog {
 		id: removeAllDialog
 		title: i18nc("@title:window", "Remove all kountdowns")
-		icon: StandardIcon.Warning
 		text: i18n("Are you sure you want to delete all your kountdowns?")
-		standardButtons: Dialog.Yes | Dialog.Cancel
+		buttons: Dialog.Yes | Dialog.Cancel
 		onAccepted: KountdownModel.removeAllKountdowns()
 	}
-	
+
 	// Fetches item from addEditSheet.qml and does action on signal
 	// Cool thing about signals: they expose the variables defined in them to the function that is listening to them
-	AddEditSheet { 
+	AddEditSheet {
 		id: addEditSheet
 		onEdited: KountdownModel.editKountdown(
-			index, 
-			name, 
-			description, 
-			kdate, 
+			index,
+			name,
+			description,
+			kdate,
 			colour
 		);
 		onAdded: KountdownModel.addKountdown(
-			name, 
-			description, 
-			kdate, 
+			name,
+			description,
+			kdate,
 			colour
 		);
 		onRemoved: KountdownModel.removeKountdown(index)
@@ -134,7 +133,7 @@ Kirigami.ApplicationWindow {
 
 	// Initial page to be loaded on app load
 	pageStack.initialPage: KountdownsPage {}
-	
+
 	function showCalendar() {
 		calPageOpen = !calPageOpen
 		if (calPageOpen == false)

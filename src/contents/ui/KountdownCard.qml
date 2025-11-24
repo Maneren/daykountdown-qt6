@@ -1,6 +1,6 @@
 /*
 * SPDX-FileCopyrightText: (C) 2021 Claudio Cambra <claudio.cambra@gmail.com>
-* 
+*
 * SPDX-LicenseRef: GPL-3.0-or-later
 */
 
@@ -12,18 +12,18 @@ import org.kde.kirigami 2.13 as Kirigami
 // Delegate is how the information will be presented in the ListView
 Kirigami.Card {
 	id: kountdownDelegate
-	
+
 	showClickFeedback: true
 	onReleased: openPopulateSheet("edit", index, name, description, date, colour)
-	
+
 	// contentItem property includes the content to be displayed on the card
 	contentItem: Item {
 		id: cardContents
 		// implicitWidth/Height define the natural width/height of an item if no width or height is specified
 		// The setting below defines a component's preferred size based on its content
-		implicitWidth: delegateLayout.implicitWidth
-		implicitHeight: delegateLayout.implicitHeight
-		
+		// implicitWidth: delegateLayout.implicitWidth
+		// implicitHeight: delegateLayout.implicitHeight
+
 		GridLayout {
 			id: delegateLayout
 			// QtQuick anchoring system allows quick definition of anchor points for positioning
@@ -49,12 +49,12 @@ Kirigami.Card {
 					property var daysLeft: Math.ceil((date.getTime()-nowDate.getTime())/86400000)
 					// Changes 'day' word depending on quantity of days
 					property var daysWord: daysLeft <= -2 || daysLeft >= 2 ? "days" : "day"
-					text: daysLeft < 0 ? 
+					text: daysLeft < 0 ?
 						i18n("%1 " + daysWord + " ago", daysLeft*-1) : i18n("%1 " + daysWord, daysLeft)
 					color: colour
 				}
 			}
-			
+
 			// Layout for positioning elements vertically
 			ColumnLayout {
 				Kirigami.Heading {

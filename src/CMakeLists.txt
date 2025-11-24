@@ -11,19 +11,19 @@ add_executable(daykountdown ${daykountdown_SRCS})
 ecm_add_app_icon(DAYKOUNTDOWN_ICON ICONS ${CMAKE_SOURCE_DIR}/org.kde.daykountdown.png)
 target_sources(daykountdown PRIVATE ${DAYKOUNTDOWN_ICON})
 target_link_libraries(daykountdown 
-	Qt5::Quick
-	Qt5::QuickControls2
-	Qt5::Qml
-	Qt5::Gui
-	Qt5::Sql
-	Qt5::Svg
-	KF5::Kirigami2
-	KF5::I18n
-	KF5::CoreAddons
-	KF5::ConfigCore
-	KF5::ConfigGui
-	KF5::WidgetsAddons
-	KF5::KIOCore)
+	Qt6::Quick
+	Qt6::QuickControls2
+	Qt6::Qml
+	Qt6::Gui
+	Qt6::Sql
+	Qt6::Svg
+	KF6::Kirigami2
+	KF6::I18n
+	KF6::CoreAddons
+	KF6::ConfigCore
+	KF6::ConfigGui
+	KF6::WidgetsAddons
+	KF6::KIOCore)
 kconfig_add_kcfg_files(daykountdown GENERATE_MOC daykountdownconfig.kcfgc)
 
 if(ANDROID)
@@ -37,4 +37,4 @@ if(ANDROID)
     )
 endif()
 
-install(TARGETS daykountdown ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS daykountdown ${KF6_INSTALL_TARGETS_DEFAULT_ARGS})

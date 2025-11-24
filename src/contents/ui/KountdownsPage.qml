@@ -1,27 +1,27 @@
 /*
  * SPDX-FileCopyrightText: (C) 2021 Claudio Cambra <claudio.cambra@gmail.com>
- * 
+ *
  * SPDX-LicenseRef: GPL-3.0-or-later
  */
 
 // Includes relevant modules used by the QML
-import QtQuick 2.6
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.2
-import org.kde.kirigami 2.13 as Kirigami
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 import org.kde.daykountdown.private 1.0
 
 // Page contains the content. This one is scrollable.
 // DON'T PUT A SCROLLVIEW IN A SCROLLPAGE - children of a ScrollablePage are already in a ScrollView
 Kirigami.ScrollablePage {
 	id: kountdownsPage
-	
+
 	// Title for the current page, placed on the toolbar
 	title: i18nc("@title", "Kountdowns")
-	
+
 	// Kirigami.Action encapsulates a UI action. Inherits from QQC2 Action
-	actions { 
-		main: Kirigami.Action {
+	actions: [
+		Kirigami.Action {
 			id: addAction
 			// Name of icon associated with the action
 			icon.name: "list-add"
@@ -29,9 +29,9 @@ Kirigami.ScrollablePage {
 			tooltip: i18nc("@action:button", "Add kountdown")
 			// What to do when triggering the action
 			onTriggered: openPopulateSheet("add")
-		}
+		},
 		// Kirigami.Actions can have nested actions.
-		right: Kirigami.Action {
+		Kirigami.Action {
 			id: sortList
 			tooltip: i18nc("@action:button", "Sort by")
 			icon.name: "view-sort"
@@ -59,14 +59,14 @@ Kirigami.ScrollablePage {
 				text: i18nc("@action:button", "Alphabetical (descending)")
 				onTriggered: KountdownModel.sortModel(KountdownModel.AlphabeticalDesc)
 			}
-		}
-		left: Kirigami.Action {
+		},
+		Kirigami.Action {
 			tooltip: i18n("Show calendar")
 			icon.name: "view-calendar"
 			onTriggered: showCalendar()
 		}
-	}
-	
+	]
+
 	// List view for card elements
 	Kirigami.CardsListView {
 		id: layout
@@ -74,7 +74,7 @@ Kirigami.ScrollablePage {
 		model: KountdownModel
 		// Grabs component from different file specified in resources
 		delegate: KountdownCard {}
-		
+
 		header: Kirigami.Heading {
 			padding: {
 				top: Kirigami.Units.largeSpacing
@@ -89,7 +89,7 @@ Kirigami.ScrollablePage {
 		}
 		// Different types of header positioning, this one gets covered up when you scroll
 		headerPositioning: ListView.PullBackHeader
-		
+
 		Kirigami.PlaceholderMessage {
 			// Center element, horizontally and vertically
 			anchors.centerIn: parent
