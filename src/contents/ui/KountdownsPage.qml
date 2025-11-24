@@ -81,8 +81,6 @@ Kirigami.ScrollablePage {
 			}
 			width: parent.width
 			horizontalAlignment: Text.AlignHCenter
-			// Javascript variables must be prefixed with 'property'
-			// Use toLocaleDateString, method to convert date object to string
 			text: i18n("Today is %1", nowDate.toLocaleDateString())
 			level: 1
 			wrapMode: Text.Wrap

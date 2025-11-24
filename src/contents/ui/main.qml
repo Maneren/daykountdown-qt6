@@ -95,7 +95,7 @@ Kirigami.ApplicationWindow {
 		id: removeAllDialog
 		title: i18nc("@title:window", "Remove all kountdowns")
 		text: i18n("Are you sure you want to delete all your kountdowns?")
-		buttons: Dialog.Yes | Dialog.Cancel
+		buttons: MessageDialog.Yes | MessageDialog.Cancel
 		onAccepted: KountdownModel.removeAllKountdowns()
 	}
 
@@ -103,20 +103,15 @@ Kirigami.ApplicationWindow {
 	// Cool thing about signals: they expose the variables defined in them to the function that is listening to them
 	AddEditSheet {
 		id: addEditSheet
-		onEdited: KountdownModel.editKountdown(
-			index,
-			name,
-			description,
-			kdate,
-			colour
-		);
-		onAdded: KountdownModel.addKountdown(
-			name,
-			description,
-			kdate,
-			colour
-		);
-		onRemoved: KountdownModel.removeKountdown(index)
+		onEdited: (index, name, description, kdate, colour) => {
+			KountdownModel.editKountdown(index, name, description, kdate, colour);
+		}
+		onAdded: (name, description, kdate, colour) => {
+			KountdownModel.addKountdown(name, description, kdate, colour);
+		}
+		onRemoved: (index) => {
+			KountdownModel.removeKountdown(index);
+		}
 	}
 
 	SystemPalette { id: palette; colorGroup: SystemPalette.Active }

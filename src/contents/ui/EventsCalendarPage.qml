@@ -11,7 +11,7 @@ import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.workspace.calendar as PlasmaCalendar
 
-import org.kde.daykountdown.private 1.0
+import org.kde.daykountdown.private
 
 Kirigami.Page {
 	id: eventsCalendarPage
@@ -34,15 +34,12 @@ Kirigami.Page {
 		spacing: Kirigami.Units.largeSpacing
 		
 		Item {
-			anchors {
-				left: parent.left
-				right: parent.right
-				top: parent.top
-			}
+			Layout.fillWidth: true
 			Layout.minimumHeight: Kirigami.Units.gridUnit * 18
 			
 			PlasmaCalendar.MonthView {
 				id: monthView
+				anchors.fill: parent
 				borderOpacity: 0.25
 				today: nowDate
 				firstDayOfWeek: Qt.locale().firstDayOfWeek
@@ -50,12 +47,8 @@ Kirigami.Page {
 		}
 		
 		Controls.ScrollView {
+			Layout.fillWidth: true
 			Layout.fillHeight: true
-			anchors {
-				left: parent.left
-				right: parent.right
-				bottom: parent.bottom
-			}
 			Controls.ScrollBar.horizontal.policy: Controls.ScrollBar.AlwaysOff
 			
 			ListView {
@@ -139,7 +132,6 @@ Kirigami.Page {
 					width: parent.width - (Kirigami.Units.largeSpacing * 4)
 					visible: eventsView.count === 0
 					text: i18n("No events on this day")
-					helpfulAction: addAction
 				}
 			}
 		}

@@ -9,6 +9,7 @@ import QtQml
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
 
 /**
  * A large date picker
@@ -85,6 +86,14 @@ ColumnLayout {
     DayOfWeekRow {
         locale: grid.locale
         Layout.fillWidth: true
+        
+        delegate: Text {
+            text: model.shortName
+            font: grid.font
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            color: Kirigami.Theme.textColor
+        }
     }
 
     MonthGrid {
@@ -109,6 +118,7 @@ ColumnLayout {
                 verticalAlignment: Text.AlignVCenter
                 text: model.day
                 font: control.font
+                color: isCurrentItem ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
             }
             
             background: Rectangle {
@@ -116,7 +126,7 @@ ColumnLayout {
                 anchors.margins: 2
                 radius: 4
                 visible: isCurrentItem
-                color: "#fcc"
+                color: Kirigami.Theme.highlightColor
             }
             
             onClicked: {

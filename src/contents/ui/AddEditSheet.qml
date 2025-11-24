@@ -1,6 +1,6 @@
 /*
 * SPDX-FileCopyrightText: (C) 2021 Claudio Cambra <claudio.cambra@gmail.com>
-* 
+*
 * SPDX-LicenseRef: GPL-3.0-or-later
 */
 
@@ -10,33 +10,34 @@ import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import org.kde.kirigami as Kirigami
-import org.kde.daykountdown.private 1.0
+import org.kde.daykountdown.private
 
 // Overlay sheets appear over a part of the window
 Kirigami.OverlaySheet {
 	id: addEditSheet
-	
+
 	// Sheet mode
 	property string mode: "add"
-	
+
 	property int index: -1
 	property string name: ""
 	property string description: ""
 	property date kdate: nowDate
 	property color colour: palette.text;
-	
+
 	// Signals can be read an certain actions performed when these happen
-	signal added (string name, string description, var kdate)
-	signal edited(int index, string name, string description, var kdate)
+	signal added(string name, string description, var kdate, color colour)
+	signal edited(int index, string name, string description, var kdate, color colour)
 	signal removed(int index)
-	
+
 	header: Kirigami.Heading {
 		// i18nc is useful for adding context for translators
-		text: mode === "add" ? i18nc("@title:window", "Add kountdown") : 
+		text: mode === "add" ? i18nc("@title:window", "Add kountdown") :
 			i18nc("@title:window", "Edit kountdown")
 	}
-	// Form layouts help align and structure a layout with several inputs
-	Kirigami.FormLayout {
+	
+	contentItem: Kirigami.FormLayout {
+		implicitWidth: Kirigami.Units.gridUnit * 20
 		// Textfields let you input text in a thin textbox
 		Controls.TextField {
 			id: nameField
@@ -145,7 +146,18 @@ Kirigami.OverlaySheet {
 			id: deleteButton
 			Layout.fillWidth: true
 			text: i18nc("@action:button", "Delete")
+			icon.name: "delete"
 			visible: mode === "edit"
+
+			// background: Rectangle {
+			// 	implicitWidth: Kirigami.Units.gridUnit * 8
+			// 	implicitHeight: Kirigami.Units.gridUnit * 2
+			// 	color: deleteButton.pressed ? Qt.darker(Kirigami.Theme.negativeBackgroundColor, 1.2) :
+			// 	       deleteButton.hovered ? Qt.lighter(Kirigami.Theme.negativeBackgroundColor, 1.1) :
+			// 	       Kirigami.Theme.negativeBackgroundColor
+			// 	radius: Kirigami.Units.cornerRadius
+			// }
+
 			onClicked: {
 				addEditSheet.removed(index)
 				close();
@@ -161,18 +173,18 @@ Kirigami.OverlaySheet {
 				// Add a listelement to the kountdownModel ListModel
 				if(mode === "add") {
 					addEditSheet.added(
-						nameField.text, 
-						descriptionField.text, 
-						datePicker.selectedDate, 
+						nameField.text,
+						descriptionField.text,
+						datePicker.selectedDate,
 						colour
 					);
 				}
 				else {
 					addEditSheet.edited(
-						index, 
-						nameField.text, 
-						descriptionField.text, 
-						datePicker.selectedDate, 
+						index,
+						nameField.text,
+						descriptionField.text,
+						datePicker.selectedDate,
 						colour
 					);
 				}
