@@ -2,7 +2,6 @@ set(daykountdown_SRCS
     main.cpp
     kountdownmodel.cpp
     importexport.cpp
-    aboutdatapasser.cpp
     resources.qrc
     )
 

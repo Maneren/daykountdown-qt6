@@ -24,11 +24,22 @@
 
 #include "kountdownmodel.h"
 #include "importexport.h"
-#include "aboutdatapasser.h"
 #include "daykountdownconfig.h"
 #include "constants.h"
 
 using namespace DayKountdown;
+
+// Minimal wrapper class for AboutData - avoids need for separate file
+class AboutDataWrapper : public QObject {
+	Q_OBJECT
+	Q_PROPERTY(KAboutData aboutData READ aboutData CONSTANT)
+public:
+	explicit AboutDataWrapper(const KAboutData& data, QObject* parent = nullptr) 
+		: QObject(parent), m_aboutData(data) {}
+	KAboutData aboutData() const { return m_aboutData; }
+private:
+	KAboutData m_aboutData;
+};
 
 /* #ifdefs are ifs that affect the preprocessor.
  * We can use this to compile specific chunks of code depending on the platform!
@@ -99,12 +110,9 @@ int main(int argc, char *argv[])
 
 	QQmlApplicationEngine engine;
 	
-	AboutDataPasser aboutDataPasser;
-	aboutDataPasser.setAboutData(aboutData);
-	
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "KountdownModel", new KountdownModel(qApp));
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "ImportExport", new ImportExport());
-	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "AboutData", &aboutDataPasser);
+	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "AboutData", new AboutDataWrapper(aboutData, qApp));
 	qmlRegisterSingletonInstance("org.kde.daykountdown.private", 1, 0, "Config", config);
 
 	engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
@@ -116,3 +124,5 @@ int main(int argc, char *argv[])
 	
 	return app.exec();
 }
+
+#include "main.moc"
